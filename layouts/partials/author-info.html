@@ -1,0 +1,17 @@
+{{ $authorKey := .Params.authorName }}
+{{ if $authorKey }}
+  {{ with index site.Data.authors $authorKey }}
+    <div class="author-info">
+      <img src="{{ .image }}" alt="{{ .name }}" class="author-avatar">
+      <div class="author-name">{{ .name }}</div>
+    </div>
+  {{ else }}
+    <div class="author-info">
+      <span>Anonymous</span>
+    </div>
+  {{ end }}
+{{ else }}
+  <div class="author-info">
+    <span>Author Missing</span>
+  </div>
+{{ end }}

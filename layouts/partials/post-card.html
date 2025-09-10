@@ -1,0 +1,49 @@
+<article class="post-card">
+  {{ if .Params.imagesq }}
+  <div class="post-card-image">
+    <a href="{{ .Permalink }}">
+      <img src="{{ .Params.imagesq }}" alt="{{ .Title }}" loading="lazy">
+    </a>
+  </div>
+  {{ end }}
+
+  <div class="post-card-content">
+    <h3 class="post-card-title">
+      <a href="{{ .Permalink }}">{{ .Title }}</a>
+    </h3>
+
+    <p class="post-card-description">{{ .Description }}</p>
+
+    <div class="post-card-meta">
+      {{ $authorKey := .Params.authorName }}
+      {{ if $authorKey }}
+        {{ with index site.Data.authors $authorKey }}
+        <div class="author-info">
+          <img class="author-avatar" src="{{ .image }}" alt="{{ .name }}">
+          <span class="author-name">{{ .name }}</span>
+        </div>
+        {{ else }}
+        <div class="author-info">
+          <span class="author-name">Unknown Author</span>
+        </div>
+        {{ end }}
+      {{ else }}
+      <div class="author-info">
+        <span class="author-name">Author Missing</span>
+      </div>
+      {{ end }}
+
+      <time class="post-card-date" datetime="{{ .Date.Format "2006-01-02" }}">
+        {{ .Date.Format "Jan 2, 2006" }}
+      </time>
+    </div>
+
+    {{ if .Params.tags }}
+    <div class="tags-preview">
+      {{ range first 3 .Params.tags }}
+      <span class="tag">#{{ . }}</span>
+      {{ end }}
+    </div>
+    {{ end }}
+  </div>
+</article>

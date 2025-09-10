@@ -1,0 +1,55 @@
+{{ define "main" }}
+<article class="blog-post">
+    <div class="container">
+        <div class="post-header">
+            {{ if .Params.image }}
+            <div class="post-image">
+                <img src="{{ .Params.image }}" alt="{{ .Title }}" loading="lazy">
+            </div>
+            {{ end }}
+            
+            <div class="post-meta">
+                <h1 class="post-title">{{ .Title }}</h1>
+                <p class="post-description">{{ .Description }}</p>
+                
+                <div class="post-info">
+                    <div class="post-info-container">
+                        {{ partial "author-info.html" . }}
+                        <time datetime="{{ .Date.Format "2006-01-02" }}">
+                            {{ .Date.Format "January 2, 2006" }}
+                        </time>
+                    </div>
+                    
+                    <div class="post-details">
+                       
+                        {{ if .Params.tags }}
+                        <div class="tags">
+                            {{ range .Params.tags }}
+                            <a href="{{ "/tags/" | relURL }}{{ . | urlize }}" class="tag">#{{ . }}</a>
+                            {{ end }}
+                        </div>
+                        {{ end }}
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="post-content">
+            {{ .Content }}
+        </div>
+        
+        {{/*  <div class="post-footer">
+            {{ if .Params.tags }}
+            <div class="tags-section">
+                <h3>Tags</h3>
+                <div class="tags-list">
+                    {{ range .Params.tags }}
+                    <a href="{{ "/tags/" | relURL }}{{ . | urlize }}" class="tag-pill">#{{ . }}</a>
+                    {{ end }}
+                </div>
+            </div>
+            {{ end }}
+        </div>  */}}
+    </div>
+</article>
+{{ end }}

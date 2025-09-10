@@ -1,0 +1,36 @@
+{{ define "main" }}
+<div class="page-header">
+    <div class="container">
+        <h1 class="page-title">Categories</h1>
+        <p class="page-description">Explore our content by category</p>
+    </div>
+</div>
+
+<section class="categories-page">
+    <div class="container">
+        <div class="categories-filter">
+            <button class="filter-btn active" data-filter="all">All Categories</button>
+            {{ range .Site.Taxonomies.tags }}
+            <button class="filter-btn" data-filter="{{ .Page.Title | urlize }}">{{ .Page.Title }}</button>
+            {{ end }}
+        </div>
+        
+        <div class="categories-content">
+            {{ range .Site.Taxonomies.tags }}
+            <div class="category-section glass-panel" data-category="{{ .Page.Title | urlize }}">
+                <h2 class="category-title">{{ .Page.Title }}</h2>
+                <div class="category-posts">
+                    {{ range .Pages }}
+                    <div class="category-post">
+                        <h3><a href="{{ .Permalink }}">{{ .Title }}</a></h3>
+                        <p>{{ .Description }}</p>
+                        <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "Jan 2, 2006" }}</time>
+                    </div>
+                    {{ end }}
+                </div>
+            </div>
+            {{ end }}
+        </div>
+    </div>
+</section>
+{{ end }}

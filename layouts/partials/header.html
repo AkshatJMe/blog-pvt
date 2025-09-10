@@ -1,0 +1,21 @@
+<header class="header">
+    <div class="container">
+        <div class="header-content">
+            <a href="{{ "/" | relURL }}" class="logo">
+                <h1>Blogs</h1>
+            </a>
+            
+            <nav class="navigation">
+                <ul class="nav-menu">
+                    {{ range .Site.Menus.main }}
+                    <li><a href="{{ .URL | relURL }}" class="nav-link">{{ .Name }}</a></li>
+                    {{ end }}
+                </ul>
+                
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+                    <span class="theme-icon">🌓</span>
+                </button>
+            </nav>
+        </div>
+    </div>
+</header>

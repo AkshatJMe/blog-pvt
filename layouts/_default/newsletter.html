@@ -1,0 +1,82 @@
+{{ define "main" }}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Dynamic Title and Meta Description from Front Matter -->
+  <title>{{ .Title }}</title>
+  <meta name="description" content="{{ .Description }}">
+
+  <!-- Additional Meta Tags if needed -->
+  <meta property="og:title" content="{{ .Title }}">
+  <meta property="og:description" content="{{ .Description }}">
+
+  <style>
+
+  </style>
+</head>
+
+<body>
+
+  <main class="newsletter-page">
+    <header class="newsletter-header">
+      <h1>{{ .Title }}</h1>
+      <p>{{ .Description }}</p>
+    </header>
+
+    <section class="newsletter-form">
+      <form id="newsletter-form" class="subscribe-form">
+        <label for="email">Your Email:</label>
+        <input type="email" id="email" name="email" placeholder="Enter your email" required>
+
+        <button class="btn" type="submit">Subscribe</button>
+      </form>
+
+      <div id="response-message" class="response-message">
+        <p>Thank you for subscribing! Check your inbox for the latest updates.</p>
+      </div>
+
+      <div id="error-message" class="error-message">
+        <p>Oops! Something went wrong. Please try again later.</p>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    document.getElementById('newsletter-form').addEventListener('submit', function (e) {
+      e.preventDefault();  // Prevent the form from submitting the usual way
+
+      // Get email input value
+      const email = document.getElementById('email').value;
+
+      // Prepare the data to be sent to the API
+      const formData = {
+        email: email
+      };
+
+      fetch('https://personal-blogs-v7i1.onrender.com/api/newsletter/subscribe', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+      })
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById('newsletter-form').reset();
+        document.getElementById('response-message').style.display = 'block';
+        document.getElementById('error-message').style.display = 'none';
+      })
+      .catch(error => {
+        document.getElementById('response-message').style.display = 'none';
+        document.getElementById('error-message').style.display = 'block';
+      });
+    });
+  </script>
+</body>
+
+</html>
+{{ end }}

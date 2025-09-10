@@ -1,0 +1,81 @@
+{{ define "main" }}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Dynamic Title and Meta Description from Front Matter -->
+  <title>{{ .Title }}</title>
+  <meta name="description" content="{{ .Description }}">
+
+  <!-- Additional Meta Tags if needed -->
+  <meta property="og:title" content="{{ .Title }}">
+  <meta property="og:description" content="{{ .Description }}">
+
+</head>
+
+<body>
+
+  <main class="contact-page">
+    <header class="contact-header">
+      <h1>{{ .Title }}</h1>
+      <p>{{ .Description }}</p>
+    </header>
+
+    <section class="contact-for">
+      <form id="contact-form" class="contact-form">
+        <label for="name">Your Name:</label>
+        <input type="text" id="name" name="name" required>
+
+        <label for="email">Your Email:</label>
+        <input type="email" id="email" name="email" required>
+
+        <label for="message">Your Message:</label>
+        <textarea id="message" name="message" required></textarea>
+
+        <button class="btn" type="submit">Send Message</button>
+      </form>
+    </section>
+  </main>
+
+  <script>
+    document.getElementById('contact-form').addEventListener('submit', function (e) {
+      e.preventDefault();  // Prevent the form from submitting the usual way
+
+      // Get form data
+      const name = document.getElementById('name').value;
+      const email = document.getElementById('email').value;
+      const message = document.getElementById('message').value;
+
+      // Prepare the data to be sent to the API
+      const formData = {
+        name: name,
+        email: email,
+        message: message
+      };
+
+      // Send the data to your API (e.g., using fetch)
+      fetch('https://personal-blogs-v7i1.onrender.com/api/contacts/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+      })
+      .then(response => response.json())
+      .then(data => {
+        // After form submission, clear the form fields
+        document.getElementById('contact-form').reset();  // This will clear all fields
+
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+    });
+  </script>
+</body>
+
+</html>
+{{ end }}

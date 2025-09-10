@@ -1,0 +1,97 @@
+{{ define "main" }}
+<div class="page-header">
+    <div class="container">
+        <h1 class="page-title">Search</h1>
+        <p class="page-description">Find the content you're looking for</p>
+    </div>
+</div>
+
+<section class="search-page">
+    <div class="container">
+        <div class="search-box glass-panel">
+            <input type="text" id="searchInput" placeholder="Search blog posts..." autocomplete="off">
+            <button id="clearSearch" class="clear-search">×</button>
+        </div>
+        
+        <div class="search-results">
+            <div id="searchResults" class="posts-grid"></div>
+            <div id="noResults" class="no-results" style="display: none;">
+                <p>No posts found matching your search.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+// Search data will be loaded from JSON
+let searchData = [];
+
+// Load search index
+fetch('/index.json')
+    .then(response => response.json())
+    .then(data => {
+        searchData = data;
+    })
+    .catch(error => console.error('Error loading search data:', error));
+
+// Search functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('searchInput');
+    const searchResults = document.getElementById('searchResults');
+    const noResults = document.getElementById('noResults');
+    const clearSearch = document.getElementById('clearSearch');
+    
+    searchInput.addEventListener('input', performSearch);
+    clearSearch.addEventListener('click', clearSearchResults);
+    
+    function performSearch() {
+        const query = searchInput.value.toLowerCase().trim();
+        
+        if (query.length === 0) {
+            clearSearchResults();
+            return;
+        }
+        
+        const results = searchData.filter(post => 
+            post.title.toLowerCase().includes(query) || 
+            post.description.toLowerCase().includes(query) ||
+            (post.tags && post.tags.some(tag => tag.toLowerCase().includes(query)))
+        );
+        
+        displayResults(results);
+    }
+    
+    function displayResults(results) {
+        if (results.length === 0) {
+            searchResults.innerHTML = '';
+            noResults.style.display = 'block';
+            return;
+        }
+        
+        noResults.style.display = 'none';
+        
+        searchResults.innerHTML = results.map(post => `
+            <article class="post-card glass-panel">
+                ${post.image ? `<div class="post-card-image"><img src="${post.image}" alt="${post.title}" loading="lazy"></div>` : ''}
+                <div class="post-card-content">
+                    <h3 class="post-card-title">
+                        <a href="${post.permalink}">${post.title}</a>
+                    </h3>
+                    <p class="post-card-description">${post.description}</p>
+                    <div class="post-card-meta">
+                        <time datetime="${post.date}">${post.dateFormatted}</time>
+                        ${post.tags ? `<div class="tags-preview">${post.tags.slice(0, 3).map(tag => `<span class="tag">#${tag}</span>`).join('')}</div>` : ''}
+                    </div>
+                </div>
+            </article>
+        `).join('');
+    }
+    
+    function clearSearchResults() {
+        searchInput.value = '';
+        searchResults.innerHTML = '';
+        noResults.style.display = 'none';
+    }
+});
+</script>
+{{ end }}
